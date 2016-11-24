@@ -1,0 +1,25 @@
+// 예제 10.7  데드락이 발생한 스레드 덤프의 일부분
+
+Found on Java-level deadlock:
+=============================
+"ApplicationServerThread":
+  waiting to lock monitor 0x080f0cdc (a MumbleDBConnection),
+  which is held by "ApplicationServerThread"
+"ApplicationServerThread":
+  waiting to lock monitor 0x080f0ed4 (a MumbleDBCalllableStatement),
+  which is held by "ApplicationServerThread"
+
+Java stack information for the threads listed above:
+"ApplicationServerThread":
+	at MumbleDBConnection.remove_statement
+	- wating to lock <0x650f7f30> (a MumbleDBConnection)
+	at MumbleDBStatement.close
+	- locked <0x6024ffb0> (a MumbleDBCallableStatement)
+	...
+
+"ApplicationServerThread":
+	at MumbleDBCallableStatement.sendBatch
+	- waiting to lock <0x6024ffb0> (a MumbleDBCallableStatement)
+	at MumbleDBConnection.commit
+	- locked <0x650f7f30> (a MumbleDBConnection)
+	...
